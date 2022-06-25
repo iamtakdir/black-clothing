@@ -18,15 +18,13 @@ const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
-  console.log(formFields);
-
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
 
   const signInWithGoogle = async () => {
     const { user } = await signInWithGooglePopup();
-    // console.log(user);
+    console.log(user);
     createUserDocumentFromAuth(user);
   };
 
@@ -36,7 +34,11 @@ const SignInForm = () => {
       const response = await signInAuthWithEmailAndPassword(email, password);
       console.log(response);
       resetFormFields();
-    } catch (error) {}
+    } catch (error) {
+      if (error.code === "auth/wrong-password") {
+        alert("You have entered wrong password , try again");
+      }
+    }
   };
 
   const handelChange = (event) => {
@@ -66,8 +68,10 @@ const SignInForm = () => {
           value={password}
         />
         <div className="buttons-container">
-          <Button type="submit"> Sign In</Button>
-          <Button buttonType="google" onClick={signInWithGoogle}>
+          <Button type="submit" buttonType="inverted">
+            Sign In
+          </Button>
+          <Button type="button" buttonType="google" onClick={signInWithGoogle}>
             SignIn Google
           </Button>
         </div>
